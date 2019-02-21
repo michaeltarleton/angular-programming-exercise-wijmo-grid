@@ -30,12 +30,23 @@ export class HomeComponent implements OnInit {
   }
 
   flexInitialized(grid: FlexGrid) {
-    this.addFinalColumn(grid)
-    grid.collectionView.filter = filterFn(this.showActive)
+    // grid.loadingRows.addHandler(this.flexLoadedRows.bind(this))
     grid.formatItem.addHandler(this.updateFormats)
-    this.updateColumnWidths(grid)
-    this.updateHeaders(grid)
-    this.isInitialized = true
+
+    const intervalId = setInterval(() => {
+      if (!grid.collectionView) { return }
+      grid.collectionView.filter = filterFn(this.showActive)
+      this.addFinalColumn(grid)
+      this.updateColumnWidths(grid)
+      this.updateHeaders(grid)
+      this.isInitialized = true
+      console.log('initialized')
+      clearInterval(intervalId)
+    })
+  }
+
+  flexLoadedRows(grid: FlexGrid) {
+    console.log('loadedRows')
   }
 
   updateFormats(grid: FlexGrid, args: wjcGrid.FormatItemEventArgs): void {
@@ -45,7 +56,7 @@ export class HomeComponent implements OnInit {
     switch (args.col) {
       case getColumnIndex('percent'): getColumn('percent').format = 'p2'; break
       case getColumnIndex('dateJoined'): getColumn('dateJoined').format = 'MM/dd/yyyy'; break
-      case getColumnIndex('amountOwned'): getColumn('amountOwned').format = 'c0'; break
+      case getColumnIndex('cashOnHand'): getColumn('cashOnHand').format = 'c0'; break
     }
   }
 

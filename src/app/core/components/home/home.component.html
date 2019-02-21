@@ -4,12 +4,15 @@
    Show inactive <input type="checkbox" [(ngModel)]="showActive" (change)="toggleShowActive()" />
  </div>
 
- <wj-flex-grid
-  #flex
-  [itemsSource]="users$ | async"
-  [selectionMode]="'ListBox'"
-  [showAlternatingRows]="true"
-  (initialized)="flexInitialized(flex)"
-  >
-  <wj-flex-grid-filter></wj-flex-grid-filter>
- </wj-flex-grid>
+ <div *ngIf="users$ | async as users">
+   <wj-flex-grid
+    #flex
+    [itemsSource]="users"
+    [selectionMode]="'ListBox'"
+    [showAlternatingRows]="true"
+    (loadedRows)="flexLoadedRows(flex)"
+    (initialized)="flexInitialized(flex)"
+    >
+    <wj-flex-grid-filter></wj-flex-grid-filter>
+   </wj-flex-grid>
+ </div>
