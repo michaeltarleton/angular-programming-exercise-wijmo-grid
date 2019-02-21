@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit {
   }
 
   flexInitialized(grid: FlexGrid) {
-    // grid.loadingRows.addHandler(this.flexLoadedRows.bind(this))
     grid.formatItem.addHandler(this.updateFormats)
 
     const intervalId = setInterval(() => {
@@ -43,10 +42,6 @@ export class HomeComponent implements OnInit {
       console.log('initialized')
       clearInterval(intervalId)
     })
-  }
-
-  flexLoadedRows(grid: FlexGrid) {
-    console.log('loadedRows')
   }
 
   updateFormats(grid: FlexGrid, args: wjcGrid.FormatItemEventArgs): void {
