@@ -1,28 +1,36 @@
 import { Injectable } from '@angular/core';
-import * as wjcCore from 'wijmo/wijmo';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+
+export interface IUser {
+  id: number
+  name: string
+  email: string
+  phone: string
+  active: boolean
+  percent: number
+  amountOwned: number
+  dateJoined: Date
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserServiceService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  getData(count: number): wjcCore.ObservableArray {
-    const countries = 'US,Germany,UK,Japan,Italy,Greece'.split(',')
-    const data = new wjcCore.ObservableArray()
-
-    for (let i = 0; i < count; i++) {
-      data.push({
-        id: i,
-        country: countries[i % countries.length],
-        date: new Date(2014, i % 12, i % 28),
-        amount: Math.random() * 10000,
-        active: i % 4 === 0,
-        percent: Math.random() / 100
-      });
-    }
-
-    return data;
+  getData(): Observable<ReadonlyArray<IUser>> {
+    return this.http.get<ReadonlyArray<IUser>>('https://jsonplaceholder.typicode.com/users').pipe(map((users: ReadonlyArray<IUser>) => {
+      console.log(Math.random())
+      return users.map(u => ({
+        ...u,
+        percent: Math.random() / 100,
+        amountOwned: Math.random() * 10000,
+        active: Math.floor(Math.random() * 10) % 3 === 0,
+        dateJoined: new Date(2014, Math.random() % 12, Math.random() % 28)
+      }))
+    }))
   }
 }
